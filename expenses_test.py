@@ -154,6 +154,7 @@ class Expenses_Test(unittest.TestCase):
         # TODO Insert 1 additional test case
         #   Hint: Test exporting with some non-existent expense types.
         file = 'export1.txt'
+        #export non-existen type
         expense_types = ['milk', 'chicken']
         expenses_manager.export_expenses(self.expenses, expense_types, file)
         f = open(file)

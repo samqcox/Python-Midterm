@@ -44,6 +44,10 @@ class Expenses_Test(unittest.TestCase):
 
         # TODO Insert 2 additional test cases
         #  Hint(s): Test both existing and non-existing expense types
+        #test non-existing expense types for case sensitivity
+        self.assertEqual(None, expenses_manager.get_expense(self.expenses, "Coffee"))
+        #test existing expense types
+        self.assertAlmostEqual(135.62,expenses_manager.get_expense(self.expenses, "entertainment").amount)
 
     def test_add_expense(self):
         # Create instance of ExpensesManager class
@@ -55,6 +59,13 @@ class Expenses_Test(unittest.TestCase):
 
         # TODO Insert 2 additional test cases
         #  Hint(s): Test adding to existing expenses
+        #adding existing expense
+        expenses_manager.add_expense(self.expenses, "coffee", 2.50)
+        self.assertAlmostEqual(14.90, self.expenses["coffee"].amount)
+        #check newly added existing expenses add amount
+        expenses_manager.add_expense(self.expenses, "fios", 3.50)
+        self.assertAlmostEqual(88.0, self.expenses["fios"].amount)
+
 
     def test_deduct_expense(self):
         # Create instance of ExpensesManager class
@@ -70,8 +81,13 @@ class Expenses_Test(unittest.TestCase):
 
         # TODO Insert 2 additional test cases
         #  Hint(s):
-        #   Test deducting too much from expense
-        #   Test deducting from non-existing expense
+        #  Test deducting too much from expense
+        #Test raising a runtime error from deducting too much
+        self.assertRaises(RuntimeError, expenses_manager.deduct_expense, self.expenses, "coffee", 100)
+        #Test deducting from a non-existent expense
+        expenses_manager.deduct_expense(self.expenses, "phone", 10)
+        self.assertNotIn("phone", self.expenses)
+
 
     def test_update_expense(self):
         # Create instance of ExpensesManager class
@@ -84,7 +100,13 @@ class Expenses_Test(unittest.TestCase):
         # TODO Insert 2 additional test cases
         #  Hint(s):
         #   Test updating an expense
-        #   Test updating a non-existing expense
+        #test updating expense of new item with lower amount
+        expenses_manager.update_expense(self.expenses, "coffee", 3.40)
+        self.assertEqual(3.40, expenses_manager.get_expense(self.expenses, "coffee").amount)
+        #test non-existing item isn't added to dictionary
+        expenses_manager.update_expense(self.expenses, "chicken", 3.50)
+        self.assertNotIn("chicken", self.expenses)
+
 
     def test_sort_expenses(self):
         # Create instance of ExpensesManager class
@@ -104,6 +126,14 @@ class Expenses_Test(unittest.TestCase):
 
         # TODO Insert 1 additional test case
         #   Hint: Test sorting expenses by 'amount'
+        expense_type_sorted_expenses = [('rent', 825.0),
+                                        ('music', 324.0),
+                                        ('entertainment', 135.62),
+                                        ('clothes', 45.0),
+                                        ('family', 32.45),
+                                        ('coffee', 12.4),
+                                        ('food', 5.0),]
+        self.assertListEqual(expense_type_sorted_expenses, expenses_manager.sort_expenses(self.expenses, "amount"))
 
     def test_export_expenses(self):
         # Create instance of ExpensesManager class
@@ -123,6 +153,14 @@ class Expenses_Test(unittest.TestCase):
 
         # TODO Insert 1 additional test case
         #   Hint: Test exporting with some non-existent expense types.
+        file = 'export1.txt'
+        expense_types = ['milk', 'chicken']
+        expenses_manager.export_expenses(self.expenses, expense_types, file)
+        f = open(file)
+        lines = f.readlines()
+        f.close()
+        #Test nothing was written to file
+        self.assertEqual(0, len(lines))
 
 
 

@@ -20,7 +20,16 @@ class ExpensesManager(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+
+        #check if expense type exists, if not return none
+        if expense_type not in expenses:
+
+            # friendly message
+            print("The requested expense type does not exist in the given expenses dictionary.")
+            return None
+
+        #return expense object
+        return expenses[expense_type]
 
     def add_expense(self, expenses, expense_type, value):
         """If the expense_type already exists in the given expenses dictionary, add the value to the associated
@@ -35,7 +44,20 @@ class ExpensesManager(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+
+        #check expense_type is in the dict
+        if expense_type in expenses:
+
+            #if it is add amount to expense type
+            expenses[expense_type].add_amount(value)
+        else:
+
+            #otherwise create new entry in the dictionary
+            expenses[expense_type] = Expense(expense_type, value)
+
+        #print the updated expense object
+        print(expenses[expense_type])
+
 
     def deduct_expense(self, expenses, expense_type, value):
         """From the given expenses dictionary, get the Expense object associated with the given expense_type and
@@ -55,7 +77,23 @@ class ExpensesManager(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+
+        #check if expense_type exists in dict
+        if expense_type in expenses:
+
+            #raise RuntimeError if the given value is greater than existing amount
+            if value > expenses[expense_type].amount:
+                raise RuntimeError
+
+            else:
+                # deduct amount from expense type
+                expenses[expense_type].deduct_amount(value)
+                #print updated expense type
+                print(expenses[expense_type])
+
+        else:
+            # print friendly message if expense type does not exist
+            print("The requested expense type does not exist")
 
     def update_expense(self, expenses, expense_type, value):
         """From the given expenses dictionary, update the Expense object associated with the given expense_type and
@@ -71,7 +109,15 @@ class ExpensesManager(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+        #check if expense type is in dictionary
+        if expense_type in expenses:
+            #update the amount to given value
+            expenses[expense_type].amount = value
+            #print updated expense object if it exists
+            print(expenses[expense_type])
+        else:
+            print("The requested expense type does not exist")
+
 
     def sort_expenses(self, expenses, sorting):
         """Converts the key:value pairs in the given expenses dictionary to a list of tuples containing the expense
@@ -91,7 +137,25 @@ class ExpensesManager(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+        #initialize list to store tuples
+        lst = []
+        #use built in dict items method to get all key:value pairs
+        items = expenses.items()
+        #iterate over key,value pairs and append then to list
+        for key, value in items:
+            lst.append((key, value.amount))
+        if sorting == "amount":
+            #sort list by amount descending
+            lst.sort(key = lambda item: item[1], reverse = True)
+            return lst
+        elif sorting == "expense_type":
+            #sort list expense type alphabetically
+            lst.sort(key = lambda item: item[0])
+            return lst
+        else:
+            print("The sorting argument is not an acceptable value")
+            return None
+
 
     def export_expenses(self, expenses, expense_types, file):
         """Exports the Expense objects associated with the given expense_types from the given expenses dictionary to
@@ -122,4 +186,16 @@ class ExpensesManager(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+        #open given file in write mode so it can overwrite
+        f = open(file, 'w')
+        #iterate over expense_types
+        for expense in expense_types:
+            # nly export expense types that exist
+            if expense in expenses:
+                #build the line and round expense amount
+                f.write(f'{expense}: {expenses[expense].amount:.2f}\n')
+        #close file
+        f.close()
+
+
+

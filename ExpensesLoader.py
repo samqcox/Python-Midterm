@@ -39,4 +39,40 @@ class ExpensesLoader(object):
         """
 
         # TODO Insert your code
-        raise NotImplementedError  # Remove this line and replace with your code
+
+        f = open(file)
+        lines = f.readlines()
+
+        for line in lines:
+
+            #split the line into list of values (expense type and expense amount) and strip whitespace
+            lst = line.strip().split(':')
+            #skip lines with missing values
+            if len(lst) <= 1:
+                continue
+
+            #extract expense type
+            expense_type = lst[0].strip()
+
+            #extract expense amount
+            amount = lst[1].strip()
+
+            try:
+                #cast amount to float
+                amount = float(amount)
+
+                #if the expense type exists already, add to its total
+                if expense_type in expenses:
+                    expenses[expense_type].add_amount(amount)
+                #otherwise create a new expense object
+                else:
+                    expenses[expense_type] = Expense(expense_type, amount)
+
+            except:
+                #go to next line in file
+                continue
+
+        #close the file
+        f.close()
+
+

@@ -25,7 +25,7 @@ class ExpensesManager(object):
         if expense_type not in expenses:
 
             # friendly message
-            print("The requested expense type does not exist in the given expenses dictionary.")
+            print("Sorry. The requested expense type does not exist.")
             return None
 
         #return expense object
@@ -93,7 +93,7 @@ class ExpensesManager(object):
 
         else:
             # print friendly message if expense type does not exist
-            print("The requested expense type does not exist")
+            print("Sorry. The requested expense type does not exist")
 
     def update_expense(self, expenses, expense_type, value):
         """From the given expenses dictionary, update the Expense object associated with the given expense_type and
@@ -116,7 +116,7 @@ class ExpensesManager(object):
             #print updated expense object if it exists
             print(expenses[expense_type])
         else:
-            print("The requested expense type does not exist")
+            print("Sorry. The requested expense type does not exist")
 
 
     def sort_expenses(self, expenses, sorting):
